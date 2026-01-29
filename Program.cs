@@ -250,6 +250,22 @@ app.MapPut("/api/patrons/{id}", (LibraryDbContext db, int id, Patron patron) =>
 
     return Results.NoContent();
 });
+
+app.MapPost("/api/patrons/{id}", (LibraryDbContext db, int id) =>
+{
+    Patron? patron = db.Patron.SingleOrDefault(p => p.Id == id);
+
+    if (patron == null)
+    {
+        return Results.NotFound();
+    }
+
+    patron.IsActive = false;
+
+    db.SaveChanges();
+    return Results.NoContent();
+});
+
 app.Run();
 
 
