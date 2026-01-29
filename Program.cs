@@ -24,12 +24,21 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Materials
-app.MapGet("/api/materials", (LibraryDbContext db) =>
+app.MapGet("/api/materials", (LibraryDbContext db, int? materialTypeId, int? genreId) =>
 {
+    IQueryable<Material> materials = db.Material.Where(m => m.OutOfCirculationSince == new DateTime(0001, 01, 01, 0, 0, 0));
 
-    return Results.Ok(db.Material
-    .Include(m => m.Genre)
-    .Include(m => m.MaterialType)
+    if (materialTypeId != null)
+    {
+        materials = materials.Where(m => m.MaterialTypeId == materialTypeId);
+    }
+
+    if (genreId != null)
+    {
+        materials = materials.Where(m => m.GenreId == genreId);
+    }
+
+    return Results.Ok(materials
     .Select(m =>
     new MaterialDTO
     {
@@ -50,9 +59,10 @@ app.MapGet("/api/materials", (LibraryDbContext db) =>
             CheckoutDays = m.MaterialType.CheckoutDays
         }
     })
-    .Where(m => m.OutOfCirculationSince == new DateTime(0001, 01, 01, 0, 0, 0))
     .ToList());
 });
+
+
 
 app.Run();
 
