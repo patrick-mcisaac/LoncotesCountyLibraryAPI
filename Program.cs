@@ -266,6 +266,24 @@ app.MapPost("/api/patrons/{id}", (LibraryDbContext db, int id) =>
     return Results.NoContent();
 });
 
+// Checkout
+
+app.MapPost("/api/checkouts", (LibraryDbContext db, Checkout checkout) =>
+{
+    try
+    {
+        checkout.CheckoutDate = DateTime.Now;
+        db.Checkout.Add(checkout);
+        db.SaveChanges();
+        return Results.Created($"/api/checkouts/{checkout.Id}", checkout);
+    }
+    catch (DbUpdateException)
+    {
+        return Results.BadRequest();
+    }
+
+});
+
 app.Run();
 
 
