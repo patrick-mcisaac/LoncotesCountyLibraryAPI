@@ -230,9 +230,26 @@ app.MapGet("/api/patrons/{id}", (LibraryDbContext db, int id) =>
 
     return Results.Ok(patron);
 
-
 });
 
+app.MapPut("/api/patrons/{id}", (LibraryDbContext db, int id, Patron patron) =>
+{
+    Patron? patronToUpdate = db.Patron.SingleOrDefault(p => p.Id == id);
+
+    if (patronToUpdate == null)
+    {
+        return Results.NotFound();
+    }
+
+    patronToUpdate.FirstName = patron.FirstName;
+    patronToUpdate.LastName = patron.LastName;
+    patronToUpdate.Email = patron.Email;
+    patronToUpdate.Address = patron.Address;
+    patronToUpdate.IsActive = patron.IsActive;
+    db.SaveChanges();
+
+    return Results.NoContent();
+});
 app.Run();
 
 
