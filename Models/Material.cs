@@ -15,5 +15,5 @@ public class Material
     public Genre Genre { get; set; }
     public MaterialType MaterialType { get; set; }
 
-    public ICollection<Checkout>? Checkouts { get; set; }
+    public ICollection<Checkout> Checkouts { get; set; }
 }

@@ -66,7 +66,11 @@ app.MapGet("/api/materials/{id}", (LibraryDbContext db, int id) =>
 {
     try
     {
-        return Results.Ok(db.Material.Where(m => m.Id == id)
+        return Results.Ok(db.Material
+        .Include(m => m.Genre)
+        .Include(m => m.MaterialType)
+        .Include(m => m.Checkouts)
+        .ThenInclude(c => c.Patron)
         .Select(m => new MaterialDTO
         {
             Id = m.Id,
@@ -85,7 +89,7 @@ app.MapGet("/api/materials/{id}", (LibraryDbContext db, int id) =>
                 Name = m.MaterialType.Name,
                 CheckoutDays = m.MaterialType.CheckoutDays
             },
-            Checkouts = m.Checkouts == null ? null : m.Checkouts.Select(c => new CheckoutDTO
+            Checkouts = m.Checkouts.Select(c => new CheckoutDTO
             {
                 Id = c.Id,
                 PatronId = c.PatronId,
@@ -102,8 +106,7 @@ app.MapGet("/api/materials/{id}", (LibraryDbContext db, int id) =>
                 }
             }).ToList()
 
-
-        }));
+        }).Single(m => m.Id == id));
     }
     catch (Exception)
     {
@@ -119,6 +122,19 @@ app.MapPost("/api/materials", (LibraryDbContext db, Material material) =>
     return Results.Created($"/api/materials/{material.Id}", material);
 });
 
+app.MapDelete("/api/materials/{id}", (LibraryDbContext db, int id) =>
+{
+    Material? material = db.Material.SingleOrDefault(m => m.Id == id);
+
+    if (material == null)
+    {
+        return Results.NotFound();
+    }
+    db.Material.Remove(material);
+    db.SaveChanges();
+    return Results.NoContent();
+
+});
 
 app.Run();
 
