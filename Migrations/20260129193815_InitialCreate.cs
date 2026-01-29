@@ -15,22 +15,6 @@ namespace LoncotesCountyLibraryAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "CheckoutDays",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    MaterialId = table.Column<int>(type: "integer", nullable: false),
-                    PatronId = table.Column<int>(type: "integer", nullable: false),
-                    CheckoutDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ReturnDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CheckoutDays", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Genre",
                 columns: table => new
                 {
@@ -98,6 +82,34 @@ namespace LoncotesCountyLibraryAPI.Migrations
                         name: "FK_Material_MaterialType_MaterialTypeId",
                         column: x => x.MaterialTypeId,
                         principalTable: "MaterialType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Checkout",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MaterialId = table.Column<int>(type: "integer", nullable: false),
+                    PatronId = table.Column<int>(type: "integer", nullable: false),
+                    CheckoutDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ReturnDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Checkout", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Checkout_Material_MaterialId",
+                        column: x => x.MaterialId,
+                        principalTable: "Material",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Checkout_Patron_PatronId",
+                        column: x => x.PatronId,
+                        principalTable: "Patron",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -173,6 +185,37 @@ namespace LoncotesCountyLibraryAPI.Migrations
                     { 16, 14, "Bon Appétit - February 2024", 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
+            migrationBuilder.InsertData(
+                table: "Checkout",
+                columns: new[] { "Id", "CheckoutDate", "MaterialId", "PatronId", "ReturnDate" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2026, 1, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, new DateTime(2026, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), 7, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, new DateTime(2026, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 15, 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, new DateTime(2026, 1, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, new DateTime(2026, 1, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), 11, 7, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 6, new DateTime(2026, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), 16, 8, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 7, new DateTime(2026, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 1, new DateTime(2026, 1, 16, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 8, new DateTime(2026, 1, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 3, new DateTime(2026, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 9, new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 7, 4, new DateTime(2026, 1, 9, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 10, new DateTime(2025, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 9, 5, new DateTime(2025, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 11, new DateTime(2025, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), 15, 7, new DateTime(2025, 12, 28, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 12, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 6, 8, new DateTime(2026, 1, 7, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 13, new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), 8, 10, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 14, new DateTime(2026, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), 10, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Checkout_MaterialId",
+                table: "Checkout",
+                column: "MaterialId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Checkout_PatronId",
+                table: "Checkout",
+                column: "PatronId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Material_GenreId",
                 table: "Material",
@@ -188,7 +231,7 @@ namespace LoncotesCountyLibraryAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CheckoutDays");
+                name: "Checkout");
 
             migrationBuilder.DropTable(
                 name: "Material");

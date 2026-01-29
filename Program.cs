@@ -62,6 +62,62 @@ app.MapGet("/api/materials", (LibraryDbContext db, int? materialTypeId, int? gen
     .ToList());
 });
 
+app.MapGet("/api/materials/{id}", (LibraryDbContext db, int id) =>
+{
+    try
+    {
+        return Results.Ok(db.Material.Where(m => m.Id == id)
+        .Select(m => new MaterialDTO
+        {
+            Id = m.Id,
+            MaterialName = m.MaterialName,
+            MaterialTypeId = m.MaterialTypeId,
+            GenreId = m.GenreId,
+            OutOfCirculationSince = m.OutOfCirculationSince,
+            Genre = new GenreDTO
+            {
+                Id = m.Genre.Id,
+                Name = m.Genre.Name
+            },
+            MaterialType = new MaterialTypeDTO
+            {
+                Id = m.MaterialType.Id,
+                Name = m.MaterialType.Name,
+                CheckoutDays = m.MaterialType.CheckoutDays
+            },
+            Checkouts = m.Checkouts == null ? null : m.Checkouts.Select(c => new CheckoutDTO
+            {
+                Id = c.Id,
+                PatronId = c.PatronId,
+                CheckoutDate = c.CheckoutDate,
+                ReturnDate = c.ReturnDate,
+                Patron = new PatronDTO
+                {
+                    Id = c.Patron.Id,
+                    FirstName = c.Patron.FirstName,
+                    LastName = c.Patron.LastName,
+                    Address = c.Patron.Address,
+                    Email = c.Patron.Email,
+                    IsActive = c.Patron.IsActive
+                }
+            }).ToList()
+
+
+        }));
+    }
+    catch (Exception)
+    {
+        return Results.NotFound();
+    }
+});
+
+
+app.MapPost("/api/materials", (LibraryDbContext db, Material material) =>
+{
+    db.Material.Add(material);
+    db.SaveChanges();
+    return Results.Created($"/api/materials/{material.Id}", material);
+});
 
 
 app.Run();

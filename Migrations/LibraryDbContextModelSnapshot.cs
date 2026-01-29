@@ -21,7 +21,7 @@ namespace LoncotesCountyLibraryAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Library.Models.CheckoutDays", b =>
+            modelBuilder.Entity("Library.Models.Checkout", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,7 +43,125 @@ namespace LoncotesCountyLibraryAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CheckoutDays");
+                    b.HasIndex("MaterialId");
+
+                    b.HasIndex("PatronId");
+
+                    b.ToTable("Checkout");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CheckoutDate = new DateTime(2026, 1, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 3,
+                            PatronId = 1,
+                            ReturnDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CheckoutDate = new DateTime(2026, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 7,
+                            PatronId = 3,
+                            ReturnDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CheckoutDate = new DateTime(2026, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 15,
+                            PatronId = 4,
+                            ReturnDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CheckoutDate = new DateTime(2026, 1, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 4,
+                            PatronId = 5,
+                            ReturnDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CheckoutDate = new DateTime(2026, 1, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 11,
+                            PatronId = 7,
+                            ReturnDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CheckoutDate = new DateTime(2026, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 16,
+                            PatronId = 8,
+                            ReturnDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CheckoutDate = new DateTime(2026, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 3,
+                            PatronId = 1,
+                            ReturnDate = new DateTime(2026, 1, 16, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CheckoutDate = new DateTime(2026, 1, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 5,
+                            PatronId = 3,
+                            ReturnDate = new DateTime(2026, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CheckoutDate = new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 7,
+                            PatronId = 4,
+                            ReturnDate = new DateTime(2026, 1, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CheckoutDate = new DateTime(2025, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 9,
+                            PatronId = 5,
+                            ReturnDate = new DateTime(2025, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CheckoutDate = new DateTime(2025, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 15,
+                            PatronId = 7,
+                            ReturnDate = new DateTime(2025, 12, 28, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CheckoutDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 6,
+                            PatronId = 8,
+                            ReturnDate = new DateTime(2026, 1, 7, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CheckoutDate = new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 8,
+                            PatronId = 10,
+                            ReturnDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CheckoutDate = new DateTime(2026, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MaterialId = 10,
+                            PatronId = 1,
+                            ReturnDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Library.Models.Genre", b =>
@@ -459,6 +577,23 @@ namespace LoncotesCountyLibraryAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Library.Models.Checkout", b =>
+                {
+                    b.HasOne("Library.Models.Material", null)
+                        .WithMany("Checkouts")
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Library.Models.Patron", "Patron")
+                        .WithMany()
+                        .HasForeignKey("PatronId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patron");
+                });
+
             modelBuilder.Entity("Library.Models.Material", b =>
                 {
                     b.HasOne("Library.Models.Genre", "Genre")
@@ -476,6 +611,11 @@ namespace LoncotesCountyLibraryAPI.Migrations
                     b.Navigation("Genre");
 
                     b.Navigation("MaterialType");
+                });
+
+            modelBuilder.Entity("Library.Models.Material", b =>
+                {
+                    b.Navigation("Checkouts");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,7 +3,7 @@ using Library.Models;
 
 public class LibraryDbContext : DbContext
 {
-    public DbSet<CheckoutDays> CheckoutDays { get; set; }
+    public DbSet<Checkout> Checkout { get; set; }
     public DbSet<Genre> Genre { get; set; }
     public DbSet<Material> Material { get; set; }
     public DbSet<MaterialType> MaterialType { get; set; }
@@ -79,6 +79,29 @@ public class LibraryDbContext : DbContext
             new Material {Id=14, MaterialName="Vogue - December 2023", MaterialTypeId=3, GenreId=11, OutOfCirculationSince= new DateTime(2024,2,10)},
             new Material {Id=15, MaterialName="Travel + Leisure - April 2024", MaterialTypeId=3, GenreId=13},
             new Material {Id=16, MaterialName="Bon Appétit - February 2024", MaterialTypeId=3, GenreId=14 }
+        });
+
+        modelBuilder.Entity<Checkout>().HasData(new Checkout[]
+        {
+            // Active checkouts (no ReturnDate set)
+            new Checkout {Id=1, MaterialId=3, PatronId=1, CheckoutDate=new DateTime(2026,1,22)},
+            new Checkout {Id=2, MaterialId=7, PatronId=3, CheckoutDate=new DateTime(2026,1,24)},
+            new Checkout {Id=3, MaterialId=15, PatronId=4, CheckoutDate=new DateTime(2026,1,20)},
+            new Checkout {Id=4, MaterialId=4, PatronId=5, CheckoutDate=new DateTime(2026,1,23)},
+            new Checkout {Id=5, MaterialId=11, PatronId=7, CheckoutDate=new DateTime(2026,1,25)},
+            new Checkout {Id=6, MaterialId=16, PatronId=8, CheckoutDate=new DateTime(2026,1,21)},
+            
+            // Returned checkouts
+            new Checkout {Id=7, MaterialId=3, PatronId=1, CheckoutDate=new DateTime(2026,1,10), ReturnDate=new DateTime(2026,1,16)},
+            new Checkout {Id=8, MaterialId=5, PatronId=3, CheckoutDate=new DateTime(2026,1,8), ReturnDate=new DateTime(2026,1,14)},
+            new Checkout {Id=9, MaterialId=7, PatronId=4, CheckoutDate=new DateTime(2026,1,5), ReturnDate=new DateTime(2026,1,9)},
+            new Checkout {Id=10, MaterialId=9, PatronId=5, CheckoutDate=new DateTime(2025,12,20), ReturnDate=new DateTime(2025,12,24)},
+            new Checkout {Id=11, MaterialId=15, PatronId=7, CheckoutDate=new DateTime(2025,12,15), ReturnDate=new DateTime(2025,12,28)},
+            new Checkout {Id=12, MaterialId=6, PatronId=8, CheckoutDate=new DateTime(2026,1,1), ReturnDate=new DateTime(2026,1,7)},
+            
+            // Overdue checkouts (checked out but not returned, past due date)
+            new Checkout {Id=13, MaterialId=8, PatronId=10, CheckoutDate=new DateTime(2026,1,15)}, // CD, 5 days = due 1/20
+            new Checkout {Id=14, MaterialId=10, PatronId=1, CheckoutDate=new DateTime(2026,1,18)}, // CD, 5 days = due 1/23
         });
 
     }

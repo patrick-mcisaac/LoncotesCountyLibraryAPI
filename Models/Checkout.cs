@@ -2,7 +2,7 @@ namespace Library.Models;
 
 using System.ComponentModel.DataAnnotations;
 
-public class CheckoutDays
+public class Checkout
 {
     public int Id { get; set; }
     [Required]
@@ -12,4 +12,6 @@ public class CheckoutDays
     [Required]
     public DateTime CheckoutDate { get; set; }
     public DateTime ReturnDate { get; set; }
+
+    public Patron Patron { get; set; }
 }
