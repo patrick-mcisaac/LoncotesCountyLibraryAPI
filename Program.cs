@@ -164,6 +164,75 @@ app.MapGet("/api/genres", (LibraryDbContext db) =>
     }));
 });
 
+// Patrons
+
+app.MapGet("/api/patrons", (LibraryDbContext db) =>
+{
+    IQueryable<Patron> patrons = db.Patron.AsQueryable();
+
+    return Results.Ok(patrons.Select(p => new PatronDTO
+    {
+        Id = p.Id,
+        FirstName = p.FirstName,
+        LastName = p.LastName,
+        Address = p.Address,
+        Email = p.Email,
+        IsActive = p.IsActive
+    }));
+});
+
+app.MapGet("/api/patrons/{id}", (LibraryDbContext db, int id) =>
+{
+    Patron? p = db.Patron
+    .Include(p => p.Checkouts)
+    .ThenInclude(c => c.Material)
+    .ThenInclude(m => m.MaterialType)
+    .SingleOrDefault(p => p.Id == id);
+
+    if (p == null)
+    {
+        return Results.NotFound();
+    }
+
+    PatronDTO? patron = new PatronDTO
+    {
+        Id = p.Id,
+        FirstName = p.FirstName,
+        LastName = p.LastName,
+        Address = p.Address,
+        Email = p.Email,
+        IsActive = p.IsActive,
+        Checkouts = p.Checkouts.Select(c => new CheckoutDTO
+        {
+            Id = c.Id,
+            PatronId = c.PatronId,
+            CheckoutDate = c.CheckoutDate,
+            ReturnDate = c.ReturnDate,
+
+            Material = new MaterialDTO
+            {
+                Id = c.Material.Id,
+                MaterialName = c.Material.MaterialName,
+                MaterialTypeId = c.Material.MaterialTypeId,
+                GenreId = c.Material.GenreId,
+                OutOfCirculationSince = c.Material.OutOfCirculationSince,
+                MaterialType = new MaterialTypeDTO
+                {
+                    Id = c.Material.MaterialType.Id,
+                    Name = c.Material.MaterialType.Name,
+                    CheckoutDays = c.Material.MaterialType.CheckoutDays
+                }
+            }
+
+        }).ToList(),
+
+    };
+
+    return Results.Ok(patron);
+
+
+});
+
 app.Run();
 
 

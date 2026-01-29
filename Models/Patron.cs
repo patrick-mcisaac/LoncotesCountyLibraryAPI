@@ -16,5 +16,6 @@ public class Patron
     [Required]
     public bool IsActive { get; set; }
 
+    public ICollection<Checkout> Checkouts { get; set; }
 
 }

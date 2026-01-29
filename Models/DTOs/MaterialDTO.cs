@@ -12,7 +12,8 @@ public class MaterialDTO
     [Required]
     public int GenreId { get; set; }
     public DateTime OutOfCirculationSince { get; set; }
-    public GenreDTO Genre { get; set; }
-    public MaterialTypeDTO MaterialType { get; set; }
+    public GenreDTO? Genre { get; set; }
+    public MaterialTypeDTO? MaterialType { get; set; }
+
     public List<CheckoutDTO>? Checkouts { get; set; }
 }

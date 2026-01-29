@@ -11,6 +11,8 @@ public class CheckoutDTO
     public DateTime CheckoutDate { get; set; }
     public DateTime ReturnDate { get; set; }
     public PatronDTO? Patron { get; set; }
+    public MaterialDTO? Material { get; set; }
+
 
     public int? DaysCheckedOut
     {
