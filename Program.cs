@@ -89,7 +89,7 @@ app.MapGet("/api/materials/{id}", (LibraryDbContext db, int id) =>
                 Name = m.MaterialType.Name,
                 CheckoutDays = m.MaterialType.CheckoutDays
             },
-            Checkouts = m.Checkouts.Select(c => new CheckoutDTO
+            Checkouts = m.Checkouts == null ? null : m.Checkouts.Select(c => new CheckoutDTO
             {
                 Id = c.Id,
                 PatronId = c.PatronId,
@@ -134,6 +134,21 @@ app.MapDelete("/api/materials/{id}", (LibraryDbContext db, int id) =>
     db.SaveChanges();
     return Results.NoContent();
 
+});
+
+
+// MaterialType
+
+app.MapGet("/api/materialtypes", (LibraryDbContext db) =>
+{
+    IQueryable<MaterialType> materialType = db.MaterialType.AsQueryable();
+
+    return Results.Ok(materialType.Select(m => new MaterialTypeDTO
+    {
+        Id = m.Id,
+        Name = m.Name,
+        CheckoutDays = m.CheckoutDays
+    }).ToList());
 });
 
 app.Run();
