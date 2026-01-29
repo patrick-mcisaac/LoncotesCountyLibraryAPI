@@ -284,6 +284,20 @@ app.MapPost("/api/checkouts", (LibraryDbContext db, Checkout checkout) =>
 
 });
 
+app.MapPatch("/api/checkouts/{id}", (LibraryDbContext db, int id) =>
+{
+    Checkout? checkout = db.Checkout.SingleOrDefault(c => c.Id == id);
+
+    if (checkout == null)
+    {
+        return Results.NotFound();
+    }
+
+    checkout.ReturnDate = DateTime.Now;
+    db.SaveChanges();
+    return Results.Ok(checkout);
+});
+
 app.Run();
 
 
