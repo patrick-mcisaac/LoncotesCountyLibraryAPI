@@ -151,6 +151,19 @@ app.MapGet("/api/materialtypes", (LibraryDbContext db) =>
     }).ToList());
 });
 
+// Genre
+
+app.MapGet("/api/genres", (LibraryDbContext db) =>
+{
+    IQueryable<Genre> genres = db.Genre.AsQueryable();
+
+    return Results.Ok(genres.Select(g => new GenreDTO
+    {
+        Id = g.Id,
+        Name = g.Name
+    }));
+});
+
 app.Run();
 
 
