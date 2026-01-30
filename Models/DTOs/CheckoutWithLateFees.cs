@@ -2,7 +2,7 @@ namespace Library.Models.DTO;
 
 using System.ComponentModel.DataAnnotations;
 
-public class CheckoutDTO
+public class CheckoutWithLateFeesDTO
 {
     public int Id { get; set; }
     [Required]
@@ -22,6 +22,21 @@ public class CheckoutDTO
         }
     }
 
+    private static decimal _lateFeePerDay = .50m;
 
+    public decimal? LateFee
+    {
+        get
+        {
+            DateTime dueDate = CheckoutDate.AddDays(Material.MaterialType.CheckoutDays);
+            DateTime returnDate = ReturnDate > new DateTime(0001, 01, 01, 0, 0, 0) ? ReturnDate : DateTime.Now;
+            int daysLate = (returnDate - dueDate).Days;
+
+            decimal fee = daysLate * _lateFeePerDay;
+
+            return daysLate > 0 ? fee : null;
+
+        }
+    }
 
 }

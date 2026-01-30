@@ -26,7 +26,48 @@ app.UseHttpsRedirection();
 // Materials
 app.MapGet("/api/materials", (LibraryDbContext db, int? materialTypeId, int? genreId) =>
 {
-    IQueryable<Material> materials = db.Material.Where(m => m.OutOfCirculationSince == new DateTime(0001, 01, 01, 0, 0, 0));
+    IQueryable<Material> materials = db.Material
+    .Where(m => m.OutOfCirculationSince == new DateTime(0001, 01, 01, 0, 0, 0));
+    if (materialTypeId != null)
+    {
+        materials = materials.Where(m => m.MaterialTypeId == materialTypeId);
+    }
+
+    if (genreId != null)
+    {
+        materials = materials.Where(m => m.GenreId == genreId);
+    }
+
+    return Results.Ok(materials
+    .Select(m =>
+    new MaterialDTO
+    {
+        Id = m.Id,
+        MaterialName = m.MaterialName,
+        MaterialTypeId = m.MaterialTypeId,
+        GenreId = m.GenreId,
+        OutOfCirculationSince = m.OutOfCirculationSince,
+        Genre = new GenreDTO
+        {
+            Id = m.Genre.Id,
+            Name = m.Genre.Name
+        },
+        MaterialType = new MaterialTypeDTO
+        {
+            Id = m.MaterialType.Id,
+            Name = m.MaterialType.Name,
+            CheckoutDays = m.MaterialType.CheckoutDays
+        }
+    })
+    .ToList());
+});
+
+
+app.MapGet("/api/materials/available", (LibraryDbContext db, int? materialTypeId, int? genreId) =>
+{
+    IQueryable<Material> materials = db.Material
+    .Where(m => m.OutOfCirculationSince == new DateTime(0001, 01, 01, 0, 0, 0))
+    .Where(m => m.Checkouts.All(co => co.ReturnDate > new DateTime(00001, 01, 01, 0, 0, 0)));
 
     if (materialTypeId != null)
     {
@@ -60,6 +101,47 @@ app.MapGet("/api/materials", (LibraryDbContext db, int? materialTypeId, int? gen
         }
     })
     .ToList());
+});
+
+app.MapGet("/api/checkouts/overdue", (LibraryDbContext db) =>
+{
+    return db.Checkout
+    .Include(co => co.Patron)
+    .Include(co => co.Material)
+    .ThenInclude(m => m.MaterialType)
+    .Where(co => (DateTime.Now - co.CheckoutDate).Days > co.Material.MaterialType.CheckoutDays && co.ReturnDate == new DateTime(0001, 01, 01, 0, 0, 0))
+    .Select(co => new CheckoutWithLateFeesDTO
+    {
+        Id = co.Id,
+        Material = new MaterialDTO
+        {
+            Id = co.Material.Id,
+            MaterialName = co.Material.MaterialName,
+            MaterialTypeId = co.Material.MaterialTypeId,
+            MaterialType = new MaterialTypeDTO
+            {
+                Id = co.Material.MaterialType.Id,
+                Name = co.Material.MaterialType.Name,
+                CheckoutDays = co.Material.MaterialType.CheckoutDays
+            },
+            GenreId = co.Material.GenreId,
+            OutOfCirculationSince = co.Material.OutOfCirculationSince,
+
+        },
+        PatronId = co.PatronId,
+        Patron = new PatronDTO
+        {
+            Id = co.Patron.Id,
+            FirstName = co.Patron.FirstName,
+            LastName = co.Patron.LastName,
+            Email = co.Patron.Email,
+            Address = co.Patron.Address,
+            IsActive = co.Patron.IsActive
+        },
+        CheckoutDate = co.CheckoutDate,
+        ReturnDate = co.ReturnDate
+    })
+    .ToList();
 });
 
 app.MapGet("/api/materials/{id}", (LibraryDbContext db, int id) =>
